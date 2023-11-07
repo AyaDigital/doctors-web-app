@@ -1,0 +1,91 @@
+.speciality-block {
+	@mixin flex-row{
+		display: flex;
+		flex-direction: row;
+	}
+	@mixin flex-column{
+		display: flex;
+		flex-direction: column;
+	}
+
+	.search-speciality {
+		&:has(div > input:focus) > label[for="speciality"] {
+			transform: translate(11px, -59px) scale(1);
+			color: #027AC5;
+			font-size: 12px;
+		}
+		&:has(div > input:not([value=""])) > label[for="speciality"] {
+			transform: translate(11px, -59px) scale(1);
+			color: #027AC5;
+			font-size: 12px;
+		}
+		& > label {
+			color:rgba(60, 60, 67, 0.6);
+			font-size: 16px;
+			transform: translate(11px, -35px) scale(1);
+			font-family: Manrope;
+			font-weight: 400;
+			background-color: white;
+			padding: 0px 8px 0px 8px;
+		}
+
+		& > div {
+			@include flex-column();
+
+			& > input {
+				font-family: Manrope;
+				font-size: 16px;
+				font-weight: 400;
+				line-height: 24px;
+				letter-spacing: 0px;
+				text-align: left;
+				color: rgba(0, 0, 0, 1);
+				background-color: transparent;
+				z-index: 111;
+				&:focus ~ label[for="speciality"]{
+					position: relative;
+					top: -49px;
+					left: 20px;
+					transform: translateY(-18px);
+					background-color: white;
+					width: fit-content;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+	}
+
+	.items-cloud {
+		@include flex-row();
+		width: 500px;
+		height: auto;
+		justify-content: flex-start;
+		column-gap: 10px;
+		margin-bottom: 16px;
+		flex-wrap: wrap;
+
+		& > .single-speciality {
+			@include flex-row();
+			padding: 6px 0px 0px 9px;
+			height: 35px;
+			margin-top: 10px;
+			width: auto;
+    		max-width: 150px;
+			border-radius: 10px;
+			background-color: rgba(204, 204, 255, 0.4);
+			align-items: baseline;
+
+			& > div:nth-child(1) {
+				white-space: nowrap;
+				width: 100%;
+				overflow: hidden;
+				-o-text-overflow: ellipsis;
+				text-overflow: ellipsis;
+			}
+
+			& > div:nth-child(2) {
+				@include flex-row();
+			}
+		}
+	}
+}

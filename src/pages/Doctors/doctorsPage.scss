@@ -1,0 +1,139 @@
+.doctors-page-layout {
+	padding: 32px 0% 20px 0%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    column-gap: 32px;
+    font-family: "Manrope";
+    place-content: space-around;
+
+	@media screen and (max-width: 1246px) {
+		grid-template-columns: none;
+		grid-template-rows: 1.5fr 1fr;
+		row-gap: 32px;
+		place-content: center;
+	 }
+
+	& > div {
+		max-width: 680px;
+		height: 980px;
+	}
+
+	& > div:nth-child(1) {
+		display: flex;
+		flex-direction: column;
+		row-gap: 16px;
+		height: 100%;
+	}
+
+	& > div:nth-child(2) {
+		width: 100%;
+		height: 100%;
+		border-radius: 16px;
+		border: 1px;
+	}
+
+	.doctors-block {
+		padding: 16px;
+		border-radius: 16px;
+		width:100%;
+		height: 128px;
+		display: flex;
+		background-color: rgba(245, 250, 255, 1);
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		column-gap: 24px;
+
+		& > .image {
+			width: 96px;
+			height: 96px;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			& > img {
+				height: 100%;
+				width: auto;
+				object-fit: contain;
+			}
+		}
+
+		& > div:nth-child(2) {
+			font-family: Manrope;
+			font-size: 24px;
+			font-weight: 600;
+			line-height: 32px;
+			text-align: left;
+			width: 55%;
+
+			& > .specialities {
+				font-size: 16px;
+				color: grey;
+				font-weight: 400;
+				line-height: 20px;
+			}
+
+			& > div:nth-child(2) {
+				font-family: Manrope;
+				font-size: 20px;
+				font-weight: 500;
+				line-height: 24px;
+				text-align: left;                
+			}
+		}
+	}
+
+	.paginationBlock {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		margin-top: 16px;
+
+		.page-link:focus{
+			box-shadow:none;
+		}
+	
+		.page-link-disabled .page-link {
+			color: rgba(151, 151, 152, 1);
+			&.next, &.prev{
+				&:hover{
+					background-color: rgba(0, 0, 0, 0);
+				}
+				color: rgb(151, 151, 152)
+			}
+		}
+	
+		.page-link {
+			position: relative;
+			padding: 10px;
+			display: block;
+			width: 44px;
+			height: 44px;
+			font-family: Manrope;
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 24px;
+			letter-spacing: 0px;
+			text-align: center;		
+			color: rgba(60, 60, 67, 0.6);
+			text-decoration: none;
+			background-color: rgba(0, 0, 0, 0);
+			border: none;
+	
+			&.next, &.prev{
+				color: rgba(0, 0, 0, 1)
+			}
+		}
+	
+		.page-item.active .page-link {
+			z-index: 3;
+			color: rgba(44, 121, 206, 1);
+			background-color: rgba(0, 0, 0, 0);
+			border: none;
+			border-color:red;
+			outline: none;
+		}
+	}
+
+  }

@@ -1,0 +1,334 @@
+.doctors-layout {
+	padding: 32px 0% 20px 0%;
+	display: grid;
+	grid-template-columns: 43% 43%;
+	column-gap: 63px;
+	place-content: center;
+	font-family: 'Manrope';
+
+	@media screen and (max-width: 1246px) {
+		grid-template-columns: none;
+		grid-template-rows: 1fr 3fr;
+		row-gap: 32px;
+		place-content: center;
+		font-family: 'Manrope';
+
+		&.no-day-selected {
+			grid-template-rows: 842px 0%;
+		}
+	 }
+
+	@mixin slots-block {
+		font-family: Manrope;
+		font-size: 10px;
+		font-weight: 500;
+		line-height: 12px;
+		letter-spacing: 0px;
+	}
+
+	& > .calendar-block {
+		display: flex;
+		flex-direction: column;
+		row-gap: 16px;
+		width: 100%;
+
+		.rc-calendar-cell{
+			width: 98px;
+			height: 96px;
+			padding: 0px 2px 0px 2px;
+		}
+
+		& > .calendar-header {
+			display: flex;
+			flex-direction: row;
+			column-gap: 16px;
+
+			font-family: Manrope;
+			font-size: 40px;
+			font-weight: 700;
+			line-height: 52px;
+			letter-spacing: 0em;
+			text-align: left;
+		}
+	
+		.calendar-common-doctors {
+			width: auto;
+			height: 680px;
+			box-shadow: none;
+			border: none;
+	
+			.rc-calendar-header {
+				border: none;
+	
+				& > div {
+					& > a {
+						text-decoration: none;
+					}
+	
+					& > span {
+						& > a {
+							font-family: Manrope;
+							font-size: 24px;
+							font-weight: 700;
+							line-height: 32px;
+							letter-spacing: 0em;
+							text-align: left;
+							text-decoration: none;
+						}
+					}
+				}
+			}
+	
+			.rc-calendar-column-header {
+				.rc-calendar-column-header-inner {
+					text-align: left;
+					padding: 8px;
+					font-family: Manrope;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 20px;
+					letter-spacing: 0px;	
+				}
+			}
+	
+			.current-date {				
+				width: 64px;
+				height: 64px;
+				top: 8px;
+				left: 9px;
+				padding: 8px;
+				border-radius: 8px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+
+				@media screen and (max-width: 1466px) {
+					width: auto;
+					height: auto;
+					transition: width 0.2s ease-in-out;
+					transition: height 0.2s ease-in-out;
+				 }
+
+				& > div:nth-child(1) {
+					font-family: Manrope;
+					font-size: 16px;
+					font-weight: 500;
+					line-height: 24px;
+					letter-spacing: 0px;
+					text-align: left;
+				}
+
+				& > .number-slots {
+					@include slots-block;
+					display: flex;
+					flex-direction: row;
+					column-gap: 4px;
+					text-align: left;
+					color: rgba(60, 60, 67, 0.6);
+
+					&.decimal {
+						column-gap: 4px;
+					}
+
+					& > .number {
+						min-width: 13px;
+					}
+				}
+	
+				&.other-month {
+					color: rgba(60, 60, 67, 0.3);
+
+					& > div:nth-child(2) {
+						@include slots-block;
+
+						text-align: left;
+						color: rgba(60, 60, 67, 0.3);
+					}
+				}
+
+				&.selected-day {
+					color: rgba(255, 255, 255, 1);
+					background-color: rgba(44, 121, 206, 1);
+	
+					& > div:nth-child(2) {
+						@include slots-block;
+	
+						color: rgba(255, 255, 255, 1);
+					}
+				}
+	
+				&.current-day {
+					top: 8px;
+					left: 9px;
+					padding: 8px;
+					border-radius: 8px;
+					border: 1px solid rgba(44, 121, 206, 1);
+				}
+			}
+		}
+	}
+
+	& > div {
+		max-width: 680px;
+		height: 100%;
+	}
+
+	& > div:nth-child(2) {
+		width: auto;
+		height: auto;
+		border-radius: 16px;
+		border: 1px;
+	}
+
+	.schedule-block {
+		display: flex;
+		flex-direction: column;
+		row-gap: 16px;
+		justify-content: flex-start;
+
+		.cancelled-appointments {
+			box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.08);
+		}
+
+		&.empty-schedule {
+			justify-content: center;
+		}
+
+		.schedule-controls {
+			display: flex;
+			flex-direction: column;
+
+			& > div:nth-child(1) {
+				color:red;
+			}
+
+			& > .controls-button {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				&.right {
+					justify-content: flex-end;
+				}
+
+				.schedule-controls-button-label {
+					display: flex;
+					flex-direction: row;
+					column-gap: 4px;
+					align-items: center;
+
+					&.switcher {
+						& > div:nth-child(1) {
+							& > svg {
+								width: 47px;
+							}
+						}
+					}
+				}
+
+				& > button {
+					width: auto;
+				}
+			}
+		}
+
+		.no-schedule,
+		.select-day-message {
+			font-family: Manrope;
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 24px;
+			letter-spacing: 0px;
+			text-align: center;
+			color: rgba(60, 60, 67, 0.6);			
+		}
+
+		.slot-unit {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			column-gap: 16px;
+			cursor: pointer;
+
+			&.empty {
+				cursor: default;
+			}
+
+			@mixin unit-font {
+				font-family: Manrope;
+				font-size: 20px;
+				font-weight: 500;
+			}
+
+			& > div:nth-child(1) {
+				width: 96px;
+				font-family: Manrope;
+				font-size: 16px;
+				font-weight: 700;
+				line-height: 20px;
+				color: rgba(60, 60, 67, 0.6);			
+			}
+
+			.patient-unit {
+				display: flex;
+				flex-direction: row;
+				width: 100%;
+				height: 60px;
+				padding: 8px;
+				border-radius: 16px;
+				column-gap: 8px;
+				align-items: center;
+
+				& > .patient-photo {
+					width: 44px;
+					height: 44px;
+					overflow: hidden;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+			
+					& > img {
+						height: 100%;
+						width: auto;
+						object-fit: contain;
+					}
+				}
+
+				& > div:nth-child(2) {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					@include unit-font;
+				}
+
+				.online-status {
+					color: rgba(44, 121, 206, 1);
+				}
+
+				&.past-event {
+					background-color: rgba(250, 250, 250, 1);
+					.online-status {
+						color: rgba(60, 60, 67, 0.3);
+					}
+				}
+
+				&.future-event {
+					background-color:rgba(245, 250, 255, 1);
+				}
+
+				&.next-event {
+					background-color: rgba(211, 227, 255, 1);
+				}
+
+				.no-appointment {
+					width: 100%;
+					text-align: center;
+					color: rgba(60, 60, 67, 0.3);
+
+					@include unit-font;
+				}
+			}
+		}
+	}
+  }

@@ -1,0 +1,210 @@
+@import "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css";
+
+#container {
+  margin: 1rem;
+}
+
+.items {
+  margin-bottom: 1rem;
+}
+
+.patients-layout {
+	padding: 0px 0px 0px 0px;
+	display: flex;
+	flex-direction: row;
+	font-family: 'Manrope';
+
+	.paginationBlock {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		margin-top: 16px;
+	}
+
+
+	.page-link:focus{
+		box-shadow:none;
+	}
+
+	.page-link-disabled .page-link {
+		color: rgba(151, 151, 152, 1);
+		&.next, &.prev{
+			&:hover{
+				background-color: rgba(0, 0, 0, 0);
+			}
+			color: rgb(151, 151, 152)
+		}
+	}
+
+	.page-link {
+		position: relative;
+		padding: 10px;
+		display: block;
+		width: 44px;
+		height: 44px;
+		font-family: Manrope;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 24px;
+		letter-spacing: 0px;
+		text-align: center;		
+		color: rgba(60, 60, 67, 0.6);
+		text-decoration: none;
+		background-color: rgba(0, 0, 0, 0);
+		border: none;
+
+		&.next, &.prev{
+			color: rgba(0, 0, 0, 1)
+		}
+	}
+
+	.page-item.active .page-link {
+		z-index: 3;
+		color: rgba(44, 121, 206, 1);
+		background-color: rgba(0, 0, 0, 0);
+		border: none;
+		border-color:red;
+		outline: none;
+	}
+
+	& > div {
+		padding: 8px 8px 8px 24px;
+	}
+	
+	.menu {
+		padding-top: 8px;
+		min-width: 232px;
+		width: 232px;
+		height: 920px;
+		box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.08);
+
+		& > div {
+			height: 56px;
+		}
+
+		.button-label {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: center;
+	  
+			& > div:nth-child(1) {
+			  display: flex;
+			  flex-direction: row;
+			  align-items: center;
+			  margin-right: 8px;
+			}
+
+		  }
+	}
+
+	.list {
+		height: 100%;
+		width: 100%;
+		padding: 32px 0px 0px 24px;
+
+		& > div:nth-child(1) {
+			font-family: Manrope;
+			font-size: 40px;
+			font-weight: 700;
+			line-height: 52px;
+			letter-spacing: 0em;
+			text-align: left;
+			margin-bottom: 32px;
+
+			display: flex;
+			flex-direction: row;
+			column-gap: 100px;
+		}
+
+		.outerGrid {
+			display: grid;
+			row-gap: 2px;
+			min-height: 616px;
+			grid-template-rows: repeat(10, 56px);
+		}
+
+		.tableGrid {
+			display: grid;
+			grid-template-columns: 80px 1fr 160px 160px 100px 1fr;
+			font-family: Manrope;
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0px;
+			text-align: left;
+			row-gap: 2px;
+
+			& > .avatar {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+				column-gap: 8px;
+				padding: 4px 16px 4px 16px;
+
+				& > .image {
+					width: 48px;
+					height: 48px;
+					overflow: hidden;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					min-width: 48px;
+					border-radius: 12px;
+
+					& > img {
+						height: 100%;
+						width: auto;
+						object-fit: contain;
+					}
+				}
+
+				& > .full-name {
+					overflow: hidden;
+					white-space: nowrap;
+				}
+
+				& > div > p {
+					font-family: Manrope;
+					font-size: 16px;
+					font-weight: 500;
+					line-height: 24px;
+					letter-spacing: 0px;
+					text-align: left;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+
+			.role {
+				border-radius: 8px;
+				background-color: rgba(255, 211, 211, 1);
+				text-align: center;
+			}
+
+			&.tableHeader {
+				font-weight: 700;
+				color: rgba(60, 60, 67, 0.6);
+			}
+
+			&.tableBody {
+				font-weight: 500;
+				color: rgba(0, 0, 0, 1);
+			}
+
+			& > div {
+				padding: 16px 16px 0px 16px;
+				height: 56px;
+			}
+
+			& > div:nth-child(2) {
+				min-width: 150px;
+			}
+			& > div:last-child {
+				text-align: end;
+			}
+		}
+	}
+
+  }

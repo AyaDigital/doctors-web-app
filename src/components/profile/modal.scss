@@ -1,0 +1,113 @@
+.verify-form-layout {
+	display: flex;
+	flex-direction: column;
+	row-gap: 32px;
+	width: 620px;
+	height: 360px;
+	padding: 32px 32px 32px 32px;
+	border-radius: 16px;
+	transform: translate(71%, 64%);
+	background-color: white;
+
+	@mixin fontSize16-message {
+		font-family: Manrope;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 24px;
+		text-align: center;
+	}
+
+	.success-message {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		row-gap: 16px;
+		@include fontSize16-message();
+	}
+
+	.error-message {
+		display: flex;
+		flex-direction: row;
+		margin-top: 10px;
+		color: red;
+		justify-content: space-between;
+	}
+
+	& > div:nth-child(1) {
+		font-family: Manrope;
+		font-size: 24px;
+		font-weight: 700;
+		line-height: 32px;
+		text-align: center;        
+	}
+
+	& > div:nth-child(2) {
+		font-size: 24px;
+		@include fontSize16-message();       
+	}
+
+	& > div:nth-child(4) {
+		text-align: center;
+		.resend-message {
+			color: rgba(151, 151, 152, 1);
+			font-family: Manrope;
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 20px;
+			letter-spacing: 0px;
+			text-align: center;			
+		}
+
+		.resend-code {
+			width: 100%;
+			& > button {
+				width: 135px;
+				background-color: 'rgba(44, 121, 206, 1)';
+				color: '#FFFFFF';
+				border: '1px solid';
+				border-color: 'rgba(44, 121, 206, 1)';
+				& > :hover {
+					background-color: 'rgba(44, 121, 206, 1)',
+				}
+			}
+		}
+	}
+
+	& > div:nth-child(3) {
+		text-align: center;
+		& > div {
+			justify-content: space-around;
+			padding: 0px 0px 0px 0px;
+
+			& > input {
+				width: 80px !important;
+				height: 80px;
+				padding: 8px 16px 8px 16px;
+				border-radius: 8px;
+				border: 1px solid rgba(198, 198, 200, 1);
+			}
+
+			& > span {
+				display: none;
+			}
+		}
+	}
+}
+
+@mixin flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.current-phone,
+.phone-hint {
+	padding: 0px 10px 20px 0px;
+
+	& > .phone-selected {
+		@include flex-row();
+		justify-content: space-between;
+	}
+	& > .no-phone {
+		color: rgba(60, 60, 67, 0.6);
+	}
+}

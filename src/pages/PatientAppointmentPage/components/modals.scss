@@ -1,0 +1,80 @@
+@mixin header-style {
+	font-family: Manrope;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 32px;
+	letter-spacing: 0px;
+	text-align: left;
+}
+
+@mixin flex-end {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+@mixin common-font {
+	font-family: Manrope;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 32px;
+	letter-spacing: 0px;
+	text-align: left;
+	color: rgba(0, 0, 0, 1);	
+}
+
+@mixin slots-block {
+	font-family: Manrope;
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 12px;
+	letter-spacing: 0px;
+	color: #32CD32;
+
+	&.no-slots {
+		color: rgba(60, 60, 67, 0.3);
+	}
+}
+
+.cancel-form-layout {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	transform: translate(71%, 100%);
+	width: 620px;
+	height: auto;
+	padding: 0px 32px 32px 32px;
+	border-radius: 12px;
+	background-color: white;
+
+	& > div:nth-child(1) {
+		@include header-style();
+		@include flex-end();
+		width: 556px;
+		height: 64px;
+		padding: 0;
+		text-align: center;
+	}
+
+	& > div:nth-child(2) {
+		@include flex-end();
+
+		font-family: Manrope;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 24px;
+		letter-spacing: 0px;
+		text-align: center;
+	}
+
+	& > .error-block {
+		text-align: center;
+		color: red;
+	}
+
+	& > .controls-block {
+		display: flex;
+		flex-direction: row;
+		column-gap: 16px;
+	}
+}

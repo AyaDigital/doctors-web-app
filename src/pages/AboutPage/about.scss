@@ -1,0 +1,41 @@
+.about-layout {
+	padding: 32px 256px 20px 256px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 32px;
+	font-family: 'Manrope';
+
+	@mixin flex-row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	@mixin flex-column {
+		display: flex;
+		flex-direction: column;
+	}
+
+    .about-block {
+        @include flex-column();
+        row-gap: 32px;
+
+		.success-message {
+			@include flex-row();
+			column-gap: 16px;
+			margin-top: 32px;
+		}
+
+        & > div:nth-child(1) {
+            font-size: 24px;
+            font-weight: 700;         
+        }
+    }
+
+	.nav-block {
+		.button-label {
+			@include flex-row();
+			column-gap: 4px;
+		}
+
+	}
+}

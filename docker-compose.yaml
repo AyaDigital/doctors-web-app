@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+
+  nginx:
+    image: nginx:1.21.0-alpine
+    container_name: nginx
+    restart: unless-stopped
+    links:
+      - webdoctor
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./:/usr/share/nginx/html
+    networks:
+      - react_app_web
+
+  webdoctor:
+    image: node:lts
+    container_name: webdoctor
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    working_dir: /var/www/html/
+    restart: unless-stopped
+    environment:
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL}
+      REACT_APP_SET_AUTH: ${REACT_APP_SET_AUTH}
+      REACT_APP_KEYCLOAK_URL: ${REACT_APP_KEYCLOAK_URL}
+    ports:
+      - ${REACT_APP_PORT}
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - react_app_web
+
+networks:
+  react_app_web:
+    driver: bridge
+
+volumes:
+  app:
+  nginx:

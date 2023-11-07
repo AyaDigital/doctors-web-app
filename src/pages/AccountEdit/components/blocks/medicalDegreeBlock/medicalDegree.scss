@@ -1,0 +1,55 @@
+.degree-block {
+	@mixin flex-row{
+		display: flex;
+		flex-direction: row;
+	}
+
+	.search-degree {
+		& > div {
+			& > input {
+				font-family: Manrope;
+				font-size: 16px;
+				font-weight: 400;
+				line-height: 24px;
+				letter-spacing: 0px;
+				text-align: left;
+				color: rgba(0, 0, 0, 1);
+		 
+			}
+		}
+	}
+
+	.items-cloud {
+		@include flex-row();
+		width: 500px;
+		height: auto;
+		justify-content: flex-start;
+		column-gap: 10px;
+		margin-bottom: 16px;
+		flex-wrap: wrap;
+
+		& > .single-degree {
+			@include flex-row();
+			padding: 6px 0px 0px 9px;
+			height: 35px;
+			margin-top: 10px;
+			width: auto;
+    		max-width: 150px;
+			border-radius: 10px;
+			background-color: rgba(204, 204, 255, 0.4);
+			align-items: baseline;
+
+			& > div:nth-child(1) {
+				white-space: nowrap;
+				width: 100%;
+				overflow: hidden;
+				-o-text-overflow: ellipsis;
+				text-overflow: ellipsis;
+			}
+
+			& > div:nth-child(2) {
+				@include flex-row();
+			}
+		}
+	}
+}
