@@ -95,7 +95,7 @@
 		"@types/google-map-react": "^2.1.7",
 		"@types/react-input-mask": "^3.0.2",
 		"@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
-		"cypress": "^6.8.0",
+		"cypress": "^13.4.0",
 		"cypress-multi-reporters": "^1.4.0",
 		"enzyme": "^3.11.0",
 		"enzyme-to-json": "^3.6.2",
