@@ -28,7 +28,10 @@ import {
 	deleteScheduleSuccess,
 	getCancelledAppointmentsRequest,
 	getCancelledAppointmentsSuccess,
-	getCancelledAppointmentsFailure
+	getCancelledAppointmentsFailure,
+	getAppointmentsGlobalSettingsRequest,
+	getAppointmentsGlobalSettingsSuccess,
+	getAppointmentsGlobalSettingsFailure
 } from './actions/schedule';
 import { getDoctorSlotsJwtRequest } from 'redux/modules/doctors/actions/doctors';
 
@@ -44,6 +47,8 @@ const getTimeZone = () => {
 	return `${offsetOperator}${offsetHours}:${offsetMinutes}`
   }
 
+const globalSettingsBaseUrl = process.env.REACT_APP_BACKEND_URL;
+
 const countSlotsUrl = 'api/count-slots-practitioners';
 const schedulesUrl = 'api/schedules';
 const appointmentUrl = 'api/appointments';
@@ -51,6 +56,24 @@ const updateAppointmentUrl = 'api/appointments/reschedule';
 const cancelAppointmentUrl = 'api/appointments/cancel';
 const cuurrentSlotsUrl = 'api/slots/slots-appointments-practitioner';
 const cancelledAppointmentsUrl = 'api/appointments/appointment-status-cancelled';
+const globalSettingsUrl = 'settings/appointmentWindow';
+
+function* getAppointmentsGlobalSettings() {
+	try {
+		let token = yield select((state) => state.auth.token);
+
+		const data = yield call(api.getData, token, globalSettingsUrl, globalSettingsBaseUrl);
+
+		if (data) {
+			yield put(getAppointmentsGlobalSettingsSuccess(data))
+		} else {
+			yield put(getAppointmentsGlobalSettingsFailure())
+		}
+	} catch (error) {
+		console.log('error', error);
+        yield put(getAppointmentsGlobalSettingsFailure(error));
+	}
+}
 
 function* getCountSlots({ payload }) {
 	try {
@@ -250,5 +273,6 @@ export default function* root() {
 	yield takeEvery(getMySlotsRequest, getMySlots);
 	yield takeEvery(deleteScheduleRequest, deleteSchedule);
 	yield takeEvery(getCancelledAppointmentsRequest, getCancelledAppointments);
+	yield takeEvery(getAppointmentsGlobalSettingsRequest, getAppointmentsGlobalSettings);
   }
   

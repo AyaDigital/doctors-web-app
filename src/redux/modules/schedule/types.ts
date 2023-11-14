@@ -2,7 +2,8 @@ import { type } from 'os';
 import {
     SlotsCountItemT as SlotTtype,
     NewAppointmentT as NewAppointmentCreatedT,
-    SlotItemT
+    SlotItemT,
+    AppointmentSettingsT
 } from '../../../types';
 export interface ScheduleActions<T> {
 	type: string;
@@ -19,9 +20,11 @@ export type ScheduleState = {
     cancelledAppointments: any[],
     error: string,
     cancellError: string,
+    isSettingsLoading: boolean,
     scheduleCreated: boolean,
     appointmentCreated: boolean,
     newAppointment: Partial<NewAppointmentCreatedT>,
     slots: SlotsCountItemT[],
-    mySlots: SlotItemT[]
+    mySlots: SlotItemT[],
+    settings: AppointmentSettingsT,
 }

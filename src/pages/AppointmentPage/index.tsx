@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import { DispatchProp, connect } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
@@ -12,11 +12,13 @@ import NonAttendingIcon from '../../images/Icons/nonAttendingIcon';
 import VideoIcon from '../../images/Icons/videoIcon';
 import Avatar from '../../images/appointmentAvatar.png';
 import AppStateType from '../../redux/types';
-import { AppointmentT, ParticipantT } from '../../types';
+import { AppointmentT, ParticipantT, AppointmentSettingsT } from '../../types';
 import Loader from '../../components/layout/Loader';
 import { getAppointmentRequest, clearSelectedAppointment } from 'redux/modules/doctors/actions/doctors';
 import { setNonAttendingPatientRequest } from 'redux/modules/patients/actions/patients';
-import { cancelAppointmentRequest, clearCanceledStatus, clearErrorStatus } from 'redux/modules/schedule/actions/schedule';
+import {
+	cancelAppointmentRequest, clearCanceledStatus, clearErrorStatus, getAppointmentsGlobalSettingsRequest
+} from 'redux/modules/schedule/actions/schedule';
 import { getProfileByTokenRequest } from 'redux/modules/profile/actions/profile';
 import { setModalWindowOpen } from '../../redux/modules/layout/actions/modalActions';
 import { CancelAppointmentModal } from './components/cancel'
@@ -35,7 +37,9 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 type AppointmentProps = {
 	doctorId?: number,
+	isSettingsLoading: boolean,
 	selectedAppointment: AppointmentT | null,
+	settings: AppointmentSettingsT,
 	isLoading?: boolean,
 	appointmentCanceled?: boolean,
 	error: string,
@@ -46,13 +50,16 @@ const Patients: React.FC<AppointmentProps> = ({
 	selectedAppointment: profile,
 	doctorId,
 	cancellError,
+	isSettingsLoading,
 	isLoading, getAppointmennt = () => {},
 	clearApointment = () => {},
+	getAppointmentsGlobalSettings = () => {},
 	cancelAppointment,
 	getProfile,
 	clearCanceled = () => {},
 	setNonAttendingPatient = () => {},
 	clearError = () => {},
+	settings,
 	appointmentCanceled
 }) => {
 	const [isCancelWindowOpen, setIsCancelWindowOpen] = useState<boolean>(false);
@@ -62,6 +69,8 @@ const Patients: React.FC<AppointmentProps> = ({
 	const [participant, setParticipant] = useState<ParticipantT>();
 	const [appointmentId, setAppointmentId] = useState<number>(0);
 	const [appointmentStatus, setAppointmentStatus] = useState<string>('');
+	const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
+	const [isVideoCallAvailable, setIsVideoCallAvailable] = useState<boolean>(false);
 
 	const navigate = useNavigate();
 	const { state: id, pathname } = useLocation();
@@ -108,6 +117,54 @@ const Patients: React.FC<AppointmentProps> = ({
 		}
 	}, [pathname, id])
 
+	useEffect(() => {
+		if (!settings?.globalTimeoutAppointment) {
+			setIsVideoCallAvailable(true)
+		} else if (appointmentDate && settings?.globalTimeoutAppointment) {
+			const appointmentDatePoint = moment(appointmentDate);
+			const afterTimeout = settings.afterTimeout;
+			const beforeTimeout = settings.beforeTimeout;
+			let message = '';
+			const interval = setInterval(() => {
+				const now = moment();
+				const diff = appointmentDatePoint.diff(now, 'minutes');
+				const callUnavailable =  (diff < 0) && ((diff * -1) > afterTimeout) || diff > beforeTimeout;
+
+				if (callUnavailable) {
+					setIsVideoCallAvailable(false);
+					if((diff < 0) && ((diff * -1) > afterTimeout)) {
+						message =
+							`The call is available ${afterTimeout} minutes after the start of the meeting. (${handleMinutes(diff * -1)} passed)`;
+						clearInterval(interval)
+					} else {
+						if (diff > beforeTimeout) {
+							message =
+								`The call will be available ${beforeTimeout} minutes before the start of the meeting. (${handleMinutes(diff)} left)`;
+						}
+					}
+					setAvailabilityMessage(message);
+				} else {
+					if (!isVideoCallAvailable) {
+						setAvailabilityMessage('');
+						setIsVideoCallAvailable(true);
+					}
+				}
+				return () =>  clearInterval(interval);
+			}, 1000)
+		}
+	}, [settings, appointmentDate])
+
+	const handleMinutes = (totalMinutes: number) => {
+		const minutes = totalMinutes % 60;
+		const hours = Math.floor(totalMinutes / 60);
+		if (hours > 0) {
+			return `${hours}h${minutes > 0 ? ` ${minutes} m` : ''}`;
+		} else {
+			return `${totalMinutes} m`;
+		}
+		
+	}
+
 	const handleVideoCall = () => {
 		window.open(`https://telehealth.aya-doc.com/room/${appointmentId}`, '_blank');
 	}
@@ -116,6 +173,7 @@ const Patients: React.FC<AppointmentProps> = ({
 		if (getAppointmennt && appointmentId) {
 			getAppointmennt(appointmentId);
 			getProfile();
+			getAppointmentsGlobalSettings();
 		}
 	}, [appointmentId, getAppointmennt])
 
@@ -164,7 +222,7 @@ const Patients: React.FC<AppointmentProps> = ({
 			</div>
 			<div>
 				{
-					isLoading || (profile === null) ? (
+					isSettingsLoading || isLoading || (profile === null) ? (
 						<Loader height='600px' />
 					) : (
 							<>
@@ -218,18 +276,24 @@ const Patients: React.FC<AppointmentProps> = ({
 										<div className='controls-block'>
 											{
 												appointmentType === 'ONLINE' ? (
-													<div>
-														<RescheduleButton
-															variant="contained"
-															disableRipple={true}
-															onClick={() => handleVideoCall()}
-														>
-															<div className="controls-button-label">
-																<VideoIcon />
-																<div>Video call</div>
-															</div>
-														</RescheduleButton>
-													</div>
+													isVideoCallAvailable ? (
+														<div className='button-block'>
+															<RescheduleButton
+																variant="contained"
+																disableRipple={true}
+																onClick={() => handleVideoCall()}
+															>
+																<div className="controls-button-label">
+																	<VideoIcon />
+																	<div>Video call</div>
+																</div>
+															</RescheduleButton>
+														</div>
+													) : (
+														<div className='availability-block'>
+															<div>{availabilityMessage}</div>
+														</div>
+													)
 												) : null
 											}
 											<div>
@@ -326,12 +390,15 @@ const mapStateToProps = (state: AppStateType) => ({
 	selectedAppointment: state.doctors.selectedAppointment,
 	appointmentCanceled: state.schedule.appointmentCanceled,
 	error: state.schedule.error,
-	cancellError: state.schedule.cancellError
+	cancellError: state.schedule.cancellError,
+	settings: state.schedule.settings,
+	isSettingsLoading: state.schedule.isSettingsLoading
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
 	getProfile: () => dispatch(getProfileByTokenRequest()),
 	getAppointmennt: (data: number) => dispatch(getAppointmentRequest(data)),
+	getAppointmentsGlobalSettings: () => dispatch(getAppointmentsGlobalSettingsRequest()),
 	clearApointment: () => dispatch(clearSelectedAppointment()),
 	setModalOpen: (data: boolean) => dispatch(setModalWindowOpen(data)),
 	cancelAppointment: (data: number) => dispatch(cancelAppointmentRequest(data)),
