@@ -260,6 +260,12 @@ export type EmergencyContactItemT = {
 	type: EmergencyTypeT
 }
 
+export type AppointmentSettingsT = {
+	beforeTimeout: number,
+	afterTimeout: number,
+	globalTimeoutAppointment: boolean
+}
+
 export type EmergencyTypeDataT = {
 	scrollToken?: string | null,
 	scrollTime?: string,

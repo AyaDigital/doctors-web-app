@@ -30,7 +30,10 @@ import {
 	DELETE_SCHEDULE_FAILURE,
 	GET_CANCELLED_APPOINTMENTS_REQUEST,
 	GET_CANCELLED_APPOINTMENTS_SUCCESS,
-	GET_CANCELLED_APPOINTMENTS_FAILURE
+	GET_CANCELLED_APPOINTMENTS_FAILURE,
+	GET_APPOINTMENTS_GLOBAL_SETTINGS_REQUEST,
+	GET_APPOINTMENTS_GLOBAL_SETTINGS_SUCCESS,
+	GET_APPOINTMENTS_GLOBAL_SETTINGS_FAILURE
 } from './actions/schedule';
 
 export const INITIAL_STATE: ScheduleState | null = {
@@ -46,11 +49,36 @@ export const INITIAL_STATE: ScheduleState | null = {
 	appointments: [],
 	cancelledAppointments: [],
 	error: '',
-	cancellError: ''
+	cancellError: '',
+	isSettingsLoading: false,
+	settings: {
+		beforeTimeout: 0,
+		afterTimeout: 0,
+		globalTimeoutAppointment :false
+	},
 };
 
 const ScheduleReducer = (state = INITIAL_STATE, { type, payload }: ScheduleActions<{data: any}>) => {
 	switch (type) {
+		case GET_APPOINTMENTS_GLOBAL_SETTINGS_REQUEST:
+			return {
+				...state,
+				isSettingsLoading: true,
+				error: ''
+			}
+		case GET_APPOINTMENTS_GLOBAL_SETTINGS_SUCCESS:
+			return {
+				...state,
+				isSettingsLoading: false,
+				settings: payload,
+				error: ''
+			}
+		case GET_APPOINTMENTS_GLOBAL_SETTINGS_FAILURE:
+			return {
+				...state,
+				isSettingsLoading: false,
+				error: payload
+			}
 		case DELETE_SCHEDULE_REQUEST:
 			return {
 				...state,

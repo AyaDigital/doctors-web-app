@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export const getData = (token, url) => {
+export const getData = (token, url, baseUrl = BASE_URL) => {
 	var requestOptions = {
 		method: 'GET',
-		url: `${BASE_URL}/${url}`,
+		url: `${baseUrl}/${url}`,
 		headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Access-Control-Allow-Methods': 'GET',
