@@ -126,7 +126,6 @@ const PatientAppointmentPage: React.FC<AppointmentProps> = ({
 	}
 
 	const handleCloseModal = () => {
-		getAppointmennt(appointmentId);
 		setIsEditWindowOpen(false);
 	}
 	
