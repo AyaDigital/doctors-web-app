@@ -3,12 +3,14 @@ import moment, { Moment } from 'moment';
 import { styled } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Radio from '@material-ui/core/Radio';
 import { MenuItem } from '@material-ui/core';
 import { CalendarBlock as Calendar  } from 'components/calendar/calendar';
 import Loader from 'components/layout/Loader';
 import SuccessIcon from '../../images/Icons/successIcon';
 import FailedIcon from '../../images/Icons/failedIcon';
-import { ScheduleCreationT, SlotsCountItemT } from '../../types'
+import { ScheduleCreationT, SlotsCountItemT } from '../../types';
+import { TextFieldStyles as TextAreaStyles} from '../../components/controls/textfields';
 import './settings.scss';
 import { CommonStyles as CommonCancelButton, TextFieldStyles } from '../AppointmentPage/components/common';
 const hourPoints = [
@@ -81,11 +83,48 @@ const UnselectedButtonStyles = {
 	}
 }
 
+const RadioButtonStyles = {
+	backgroundColor: 'white',
+	'&.Mui-checked': {
+		color: 'black',
+		'&::hover': {
+			backgroundColor: 'white'
+		}
+	},
+	'&::hover': {
+		backgroundColor: 'white'
+	}
+}
+const TextFieldFont = {
+	fontFamily: 'Manrope',
+	fontSize: '16px',
+	fontWeight: 400,
+};
+
+const TextAreaStyle = {
+	width: '580px',
+	height: 'auto',
+	'& > .MuiOutlinedInput-root.MuiInputBase-formControl': {
+		height: 'auto',
+		paddingTop: '10px',
+		'& > input': TextFieldFont,
+		'& > textarea': {
+			// height: '96px !important'
+		}
+	}
+};
+
+const TextAreaField = styled(TextField)(
+	Object.assign({}, TextAreaStyles, TextAreaStyle, {height: 'auto'})
+);
+
 const CancelEditionButton = styled(Button)(Object.assign(CancelButtonStyles, CommonStyles));
 const SaveChangesButton = styled(Button)(Object.assign(SaveChangesButtonStyles, CommonStyles));
 
 const SelectedButton = styled(Button)(Object.assign(SelectedButtonStyles, CommonStatusStyles));
 const UnselectedButton = styled(Button)(Object.assign(UnselectedButtonStyles, CommonStatusStyles));
+
+const RadioButton = styled(Radio)(RadioButtonStyles);
 
 const ConsultationTypeButton = (
     { isSelected,  ...props } : { isSelected: boolean, children: string, onClick: () => void }
@@ -116,6 +155,8 @@ export const StyledTextField = styled(TextField)(Object.assign(TextFieldStyles, 
 		transform: 'translate(14px, 4px) scale(1)'
 	}
 }));
+const StyledSelector = Object.assign(StyledTextField, {width: '30%'});
+
 export const CancelButton = styled(Button)(Object.assign({color: 'rgba(255, 84, 74, 1)'}, CommonCancelButton));
 export const DatesButton = styled(Button)({
 	backgroundColor: 'transparent',
@@ -129,6 +170,7 @@ const THE_LAST_HOUR = '18:00';
 type ScheduleWindowT = {
 	scheduleCreated?: boolean,
 	isOpen?: boolean,
+	address?: string,
 	isScheduleCreationLoading?: boolean,
 	scheduleError?: string,
 	closeModal: () => void,
@@ -143,6 +185,7 @@ function ScheduleWindow({
 	scheduleCreated = false,
 	isScheduleCreationLoading = false,
 	scheduleError = '',
+	address = '',
 	slotsCalculation,
 	isOpen = false,
 	closeModal = () => {},
@@ -162,6 +205,7 @@ function ScheduleWindow({
 	const [selectedMonth, setSelectedMonth] = useState<Moment | null>(moment());
 	const [groupedDate, setGroupeddate] = useState<groupedSlotsT>({});
 	const [timePoints, setTimePoints] = useState(hourPoints);
+	const [appointmentLocation, setAppointmentLocation] = useState<string>();
 
 	const finalObj: groupedSlotsT= {};
 
@@ -310,6 +354,11 @@ function ScheduleWindow({
 		setSelectedDate('');
 	}
 
+	const handleChangeLocation = (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log('data', event.target.value);
+		setAppointmentLocation(event.target.value);
+	}
+
 	return (
 		<>
 			{
@@ -343,39 +392,213 @@ function ScheduleWindow({
 												<div className='title'>
 													New schedule
 												</div>
-												<div className='grey-header'>Working days</div>
-												<div className='calendar-block'>
-													<Calendar
-														className={'calendar-schedule-common'}
-														dateRender={renderDate}
-														onChange={(date: Moment | null) => handleChangeMonth(date)}
-														disabledDate={(current: Moment | undefined) => {
-															return moment(current).isSame(moment(selectedMonth), 'month');
-														}}
-													/>
+												
+												<div className='upper-block'>
+													<div className='calendar-block'>
+														<div className='grey-header'>Working days</div>
+														<div className='calendar-block'>
+															<Calendar
+																className={'calendar-schedule-common'}
+																dateRender={renderDate}
+																onChange={(date: Moment | null) => handleChangeMonth(date)}
+																disabledDate={(current: Moment | undefined) => {
+																	return moment(current).isSame(moment(selectedMonth), 'month');
+																}}
+															/>
+														</div>
+														<div className='errorBlock margin-top'>
+															{saveHandler && !selectedDate && REQUIRED_MESSAGE}
+														</div>
+													</div>	
+
+													<div className='working-hours-block'>
+														<div className='grey-header'>
+															Working hours
+														</div>
+														<div className={`time-picker-block ${selectedDate ? '' : 'empty'}`}>
+															{
+																selectedDate ? (
+																	<>
+																		<div className='select-period-block'>
+																			<StyledTextField
+																				value={fromValue}
+																				select
+																				label="Start time"
+																				variant="outlined"
+																				onChange={(event) => {
+																					setFromValue(event.target.value);
+																				}}
+																			>
+																				{
+																					timePoints.map((item, index) => {
+																						return (
+																							<MenuItem
+																								key={index}
+																								disableRipple={true} 
+																								value={item}
+																							>
+																								{item}
+																							</MenuItem>
+																						)
+																					})
+																				}
+																			</StyledTextField>
+																		</div>
+																		<div className='select-period-block'>
+																			<StyledTextField
+																				value={toValue}
+																				select
+																				label="End time"
+																				variant="outlined"
+																				onChange={(event) => {
+																					setToValue(event.target.value);
+																				}}
+																			>
+																					{
+																						timePoints.map((item, index) => {
+																							return (
+																								<MenuItem
+																									key={index}
+																									disableRipple={true} 
+																									value={item}
+																								>
+																									{item}
+																								</MenuItem>
+																							)
+																						})
+																					}
+																			</StyledTextField>
+																		</div>
+																	</>
+																) : NO_DATE_SELECTED_MESSAGE
+															}
+														</div>
+														<div className='errorBlock'>
+															{saveHandler && (!toValue || !fromValue) && REQUIRED_MESSAGE}
+														</div>
+														<div className='grey-header'>Appointment type</div>
+														<div className={`controls-block ${selectedDate ? '' : 'empty'}`}>
+															{
+																selectedDate ? (
+																	<>
+																		<div>
+																			<ConsultationTypeButton
+																				isSelected={type === 'ONLINE'}
+																				onClick={() => type === 'ONLINE' ? null : setType('ONLINE') }
+																			>
+																				Online
+																			</ConsultationTypeButton>
+																		</div>
+																		<div>
+																			<ConsultationTypeButton
+																				isSelected={type === 'OFFLINE'}
+																				onClick={() => type === 'OFFLINE' ? null : setType('OFFLINE')}
+																			>
+																				Offline
+																			</ConsultationTypeButton>
+																		</div>
+																	</>
+																) : NO_DATE_SELECTED_MESSAGE
+															}
+														</div>
+														<div className='errorBlock'>
+															{saveHandler && !type && REQUIRED_MESSAGE}
+														</div>
+													</div>
 												</div>
-												<div className='errorBlock margin-top'>
-													{saveHandler && !selectedDate && REQUIRED_MESSAGE}
-												</div>
-												<div className='grey-header'>
-													Working hours
-												</div>
-												<div className={`time-picker-block ${selectedDate ? '' : 'empty'}`}>
+
+												<div className='lower-block'>
 													{
-														selectedDate ? (
+														type === 'OFFLINE' ? (
 															<>
-																<div className='select-period-block'>
+																<div className='appointment-location-label'>
+																	<RadioButton
+																		disableRipple={true}
+																		checked={appointmentLocation === 'doctor'}
+																		onChange={handleChangeLocation}
+																		value="doctor"
+																		color="default"
+																		name="radio-button-demo"
+																	/>
+																	<div>
+																		Use the doctor`s work address
+																	</div>
+																</div>
+																{
+																	appointmentLocation === 'doctor' ? (
+																		<div>
+																			{address}
+																		</div>
+																	) : null
+																}
+																<div className='appointment-location-label'>
+																	<RadioButton
+																		disableRipple={true}
+																		checked={appointmentLocation === 'clinic'}
+																		onChange={handleChangeLocation}
+																		value="clinic"
+																		color="default"
+																		name="radio-button-demo"
+																	/>
+																	<div>
+																		Use clinic address
+																	</div>
+																</div>
+																<div className='select-clinic'>
 																	<StyledTextField
-																		value={fromValue}
+																		// value={toValue}
 																		select
-																		label="Start time"
+																		disabled={appointmentLocation === 'doctor'}
+																		label="Select an appointment clinic"
 																		variant="outlined"
 																		onChange={(event) => {
-																			setFromValue(event.target.value);
+																			// setToValue(event.target.value);
 																		}}
 																	>
+																			{
+																				['Clinic1', 'Clinic2', 'Clinic3']
+																					.map((item, index) => {
+																						return (
+																							<MenuItem
+																								key={index}
+																								disableRipple={true} 
+																								value={item}
+																							>
+																								{item}
+																							</MenuItem>
+																						)
+																					})
+																			}
+																	</StyledTextField>
+																</div>
+																<div className='description'>
+																	<TextAreaField
+																		multiline
+																		//value={aboutText}
+																		//focused={!!aboutText}
+																		minRows={2}
+																		// maxRows={10}
+																		variant="outlined"
+																	/>
+																</div>
+															</>
+														) : null
+													}
+													<div className='grey-header'>Consultation time</div>
+													<div className={`duration-block ${selectedDate ? '' : 'empty'}`}>
+														{
+															selectedDate ? (
+																<StyledTextField
+																	value={duration}
+																	select
+																	label="Duration"
+																	variant="outlined"
+																	onChange={(event) => {
+																		setDuration(event.target.value);
+																	}}
+																>
 																		{
-																			timePoints.map((item, index) => {
+																			durations.map((item, index) => {
 																				return (
 																					<MenuItem
 																						key={index}
@@ -387,101 +610,15 @@ function ScheduleWindow({
 																				)
 																			})
 																		}
-																	</StyledTextField>
-																</div>
-																<div className='select-period-block'>
-																	<StyledTextField
-																		value={toValue}
-																		select
-																		label="End time"
-																		variant="outlined"
-																		onChange={(event) => {
-																			setToValue(event.target.value);
-																		}}
-																	>
-																			{
-																				timePoints.map((item, index) => {
-																					return (
-																						<MenuItem
-																							key={index}
-																							disableRipple={true} 
-																							value={item}
-																						>
-																							{item}
-																						</MenuItem>
-																					)
-																				})
-																			}
-																	</StyledTextField>
-																</div>
-															</>
-														) : NO_DATE_SELECTED_MESSAGE
-													}
+																</StyledTextField>
+															) : NO_DATE_SELECTED_MESSAGE
+														}
+													</div>
+													<div className='errorBlock'>
+														{saveHandler && !duration && REQUIRED_MESSAGE}
+													</div>
 												</div>
-												<div className='errorBlock'>
-													{saveHandler && (!toValue || !fromValue) && REQUIRED_MESSAGE}
-												</div>
-												<div className='grey-header'>Appointment type</div>
-												<div className={`controls-block ${selectedDate ? '' : 'empty'}`}>
-													{
-														selectedDate ? (
-															<>
-																<div>
-																	<ConsultationTypeButton
-																		isSelected={type === 'ONLINE'}
-																		onClick={() => type === 'ONLINE' ? null : setType('ONLINE') }
-																	>
-																		Online
-																	</ConsultationTypeButton>
-																</div>
-																<div>
-																	<ConsultationTypeButton
-																		isSelected={type === 'OFFLINE'}
-																		onClick={() => type === 'OFFLINE' ? null : setType('OFFLINE')}
-																	>
-																		Offline
-																	</ConsultationTypeButton>
-																</div>
-															</>
-														) : NO_DATE_SELECTED_MESSAGE
-													}
-												</div>
-												<div className='errorBlock'>
-													{saveHandler && !type && REQUIRED_MESSAGE}
-												</div>
-												<div className='grey-header'>Consultation time</div>
-												<div className={`duration-block ${selectedDate ? '' : 'empty'}`}>
-													{
-														selectedDate ? (
-															<StyledTextField
-																value={duration}
-																select
-																label="Duration"
-																variant="outlined"
-																onChange={(event) => {
-																	setDuration(event.target.value);
-																}}
-															>
-																	{
-																		durations.map((item, index) => {
-																			return (
-																				<MenuItem
-																					key={index}
-																					disableRipple={true} 
-																					value={item}
-																				>
-																					{item}
-																				</MenuItem>
-																			)
-																		})
-																	}
-															</StyledTextField>
-														) : NO_DATE_SELECTED_MESSAGE
-													}
-												</div>
-												<div className='errorBlock'>
-													{saveHandler && !duration && REQUIRED_MESSAGE}
-												</div>
+
 											</div>
 											<div className='save-changes-block'>
 												<div>
