@@ -56,6 +56,7 @@ type AppointmentProps = {
 	scheduleCreated: boolean,
 	isScheduleCreationLoading: boolean,
 	scheduleError: string,
+	address: string,
 	slotsCalculation?: SlotsCountItemT[]
 } & DispatchProps;
 
@@ -63,6 +64,7 @@ const AppointmentsSettings: React.FC<AppointmentProps> = ({
 	scheduleCreated,
 	isScheduleCreationLoading,
 	scheduleError,
+	address,
 	slotsCalculation,
 	updateScheduleStatus,
 	setSchedule,
@@ -107,6 +109,7 @@ const AppointmentsSettings: React.FC<AppointmentProps> = ({
 						updateScheduleStatus={updateScheduleStatus}
 						isScheduleCreationLoading={isScheduleCreationLoading}
 						scheduleError={scheduleError}
+						address={address}
 						// cancelAppointment={cancelAppointment}
 					/>
 				</div>
@@ -118,6 +121,7 @@ const AppointmentsSettings: React.FC<AppointmentProps> = ({
 
 const mapStateToProps = (state: AppStateType) => ({
 	scheduleCreated: state.schedule.scheduleCreated,
+	address: state.profile.address,
 	isScheduleCreationLoading: state.schedule.isScheduleCreationLoading,
 	slotsCalculation: state.schedule.slots,
 	scheduleError: state.schedule.error

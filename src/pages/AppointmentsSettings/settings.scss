@@ -41,10 +41,10 @@
 
 .settings-schedule-form-layout {
 	position: absolute;
-	top: 2vw;
-	left: 30vw;
+	top: 1vw;
+	left: 18vw;
 	transform: translate(0%, 7%);
-	width: 620px;
+	width: 890px;
 	height: auto;
 	padding: 0px 32px 32px 32px;
 	border-radius: 12px;
@@ -121,12 +121,49 @@
         }
     }
 
+    .upper-block {
+        @include flex-row();
+        column-gap: 10px;
+
+        .working-hours-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            row-gap: 20px;
+
+            & > .errorBlock {
+                color: red;
+                text-align: start;
+        
+                &.margin-top {
+                    margin-top: 0px;
+                }
+            }
+        }
+    }
+
+    .lower-block {
+        .appointment-location-label {
+            @include flex-row();
+            align-items: center;
+        }
+
+        .select-clinic {
+            width: 556px;
+            padding: 8px 16px 8px 16px;
+        }
+
+        .description {
+            width: 556px;
+            padding: 8px 16px 8px 16px;
+        }
+    }
+
     .calendar-block {
-        height: 298px;
+        height: auto;
 
         .calendar-schedule-common {
             width: auto;
-            height: 290px;
             box-shadow: none;
             border: none;
             background: rgba(250, 250, 250, 1);
@@ -274,9 +311,10 @@
 
     .time-picker-block {
         @include flex-row();
-        column-gap: 16px;
+        flex-direction: column;
+        row-gap: 12px;
         width: 556px;
-        height: 48px;
+
         padding: 8px 16px 8px 16px;
         border-radius: 16px;
 
@@ -287,6 +325,7 @@
 
         .select-period-block {
             width: 50%;
+            height: 34px;
 
             & > div > div {
                 & > .MuiSelect-select:focus {
@@ -303,12 +342,13 @@
 
     .controls-block{
         @include flex-row();
+        flex-direction: column;
         justify-content: space-around;
         width: 556px;
-        height: 48px;
+
         padding: 8px 16px 8px 16px;
         border-radius: 16px;
-        column-gap: 12px;
+        row-gap: 12px;
 
         &.empty {
             justify-content: flex-start;
